@@ -12,7 +12,7 @@
   "description": "",
   "dependencies": {
     "express": "^5.1.0"
-  }
+  },
+  "buildNote": "Updated for build test"
 }
 
-// Updated for build test
