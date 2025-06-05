@@ -40,7 +40,7 @@ increment_version() {
   echo "$current_year-$current_month" > "$DATE_FILE"
 }
 
-# Decide how to increment
+# Decide what to bump
 if [ "$current_year" -gt "$last_year" ]; then
   increment_version "major"
 elif [ "$current_month" -gt "$last_month" ]; then
@@ -51,11 +51,11 @@ fi
 
 new_version=$(cat "$VERSION_FILE")
 
-# This is fine for logs
-echo "New version: $new_version"
+# ✅ This is the correct format for GitHub Actions
+echo "VERSION=$new_version" >> "$GITHUB_ENV"
 
-# ✅ This is correct format for GitHub Actions
-echo "VERSION=$new_version" >> $GITHUB_ENV
+# ✅ This is safe for logs
+echo "Generated version: $new_version"
 
-# Output version string so step can use it if needed
+# ✅ Return version so bash caller can use it
 echo "$new_version"
