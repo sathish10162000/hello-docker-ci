@@ -1,55 +1,26 @@
 #!/bin/bash
 
-VERSION_FILE=".version_dev"
-DATE_FILE=".version_dev_date"
+VERSION_FILE=".version"
 
-if [ -f "$VERSION_FILE" ]; then
-  current_version=$(cat $VERSION_FILE)
-else
-  current_version="0.0.0"
+# If the version file does not exist, start with 0.0.1
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "0.0.1" > "$VERSION_FILE"
 fi
 
-echo "Current version: $current_version"
+# Read current version
+VERSION=$(cat $VERSION_FILE)
 
-IFS='.' read -ra version_parts <<< "$current_version"
-major=${version_parts[0]:-0}
-minor=${version_parts[1]:-0}
-patch=${version_parts[2]:-0}
+# Split version into major.minor.patch
+IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
-current_month=$(date +"%m")
-current_year=$(date +"%Y")
+# Increment patch version
+PATCH=$((PATCH + 1))
 
-if [ -f "$DATE_FILE" ]; then
-  last_year=$(cut -d'-' -f1 $DATE_FILE)
-  last_month=$(cut -d'-' -f2 $DATE_FILE)
-else
-  last_year=$current_year
-  last_month=$current_month
-fi
+# Compose new version
+NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-increment_version() {
-  case $1 in
-    major)
-      major=$((major + 1)); minor=0; patch=0;;
-    minor)
-      minor=$((minor + 1)); patch=0;;
-    patch)
-      patch=$((patch + 1));;
-  esac
+# Save new version to file
+echo "$NEW_VERSION" > "$VERSION_FILE"
 
-  new_version="$major.$minor.$patch"
-  echo "New version: $new_version"
-
-  echo $new_version > $VERSION_FILE
-  echo "$current_year-$current_month" > $DATE_FILE
-  echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-}
-
-if [ "$current_year" -gt "$last_year" ]; then
-  increment_version "major"
-elif [ "$current_month" -gt "$last_month" ]; then
-  increment_version "minor"
-else
-  increment_version "patch"
-fi
-
+# Output version so GitHub Actions can use it
+echo "$NEW_VERSION"
