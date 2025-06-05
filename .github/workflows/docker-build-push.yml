@@ -22,14 +22,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Generate version dynamically
+      - name: Make version script executable and run it
         run: |
-          chmod +x ./version-dev.sh
-          ./version-dev.sh  # this sets VERSION in GITHUB_ENV
+          chmod +x .github/scripts/version-dev.sh
+          .github/scripts/version-dev.sh
 
-      - name: Build and push Docker image with dynamic version
+      - name: Build and push Docker image with dynamic tag
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: sathish10162000/hello-docker-ci:${{ env.VERSION }}
+          tags: sathish10162000/hello-docker-ci:${{ env.NEW_VERSION }}
+
+      - name: Commit updated version files back to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .version_dev .version_dev_date
+          git commit -m "chore: update version to ${{ env.NEW_VERSION }} [skip ci]" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push"
