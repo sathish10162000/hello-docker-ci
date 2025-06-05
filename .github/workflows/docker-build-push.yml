@@ -27,6 +27,11 @@ jobs:
           chmod +x .github/scripts/version-dev.sh
           .github/scripts/version-dev.sh
 
+          - name: Make version script executable and run it
+        run: |
+          chmod +x .github/scripts/version-dev.sh
+          .github/scripts/version-dev.sh
+
       - name: Build and push Docker image with dynamic tag
         uses: docker/build-push-action@v5
         with:
