@@ -2,25 +2,21 @@
 
 VERSION_FILE=".version"
 
-# If the version file does not exist, start with 0.0.1
+# If version file doesn't exist, start at 0.0.1
 if [ ! -f "$VERSION_FILE" ]; then
   echo "0.0.1" > "$VERSION_FILE"
 fi
 
-# Read current version
+# Read and split version
 VERSION=$(cat $VERSION_FILE)
-
-# Split version into major.minor.patch
 IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
-# Increment patch version
+# Increment patch
 PATCH=$((PATCH + 1))
-
-# Compose new version
 NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-# Save new version to file
+# Save new version
 echo "$NEW_VERSION" > "$VERSION_FILE"
 
-# Output version so GitHub Actions can use it
-echo "$NEW_VERSION"
+# Print to GitHub Actions
+echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
