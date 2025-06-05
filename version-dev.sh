@@ -42,7 +42,6 @@ increment_version() {
 
   echo $new_version > $VERSION_FILE
   echo "$current_year-$current_month" > $DATE_FILE
-  echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
 }
 
 if [ "$current_year" -gt "$last_year" ]; then
@@ -52,4 +51,5 @@ elif [ "$current_month" -gt "$last_month" ]; then
 else
   increment_version "patch"
 fi
-echo $new_version
+echo "$new_version"
+
