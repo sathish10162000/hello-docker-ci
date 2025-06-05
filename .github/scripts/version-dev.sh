@@ -49,3 +49,9 @@ elif [ "$current_month" -gt "$last_month" ]; then
 else
   increment_version "patch"
 fi
+
+# Safe export to GitHub Actions
+echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
+echo "✅ Set version to $new_version"
+
+
