@@ -9,8 +9,6 @@ else
   current_version="0.0.0"
 fi
 
-echo "Current version: $current_version"
-
 IFS='.' read -ra version_parts <<< "$current_version"
 major=${version_parts[0]:-0}
 minor=${version_parts[1]:-0}
@@ -38,12 +36,11 @@ increment_version() {
   esac
 
   new_version="$major.$minor.$patch"
-  echo "New version: $new_version"
-
-  echo $new_version > $VERSION_FILE
-  echo "$current_year-$current_month" > $DATE_FILE
+  echo "$new_version" > "$VERSION_FILE"
+  echo "$current_year-$current_month" > "$DATE_FILE"
 }
 
+# Decide how to increment
 if [ "$current_year" -gt "$last_year" ]; then
   increment_version "major"
 elif [ "$current_month" -gt "$last_month" ]; then
@@ -51,5 +48,14 @@ elif [ "$current_month" -gt "$last_month" ]; then
 else
   increment_version "patch"
 fi
-echo "$new_version"
 
+new_version=$(cat "$VERSION_FILE")
+
+# This is fine for logs
+echo "New version: $new_version"
+
+# ✅ This is correct format for GitHub Actions
+echo "VERSION=$new_version" >> $GITHUB_ENV
+
+# Output version string so step can use it if needed
+echo "$new_version"
