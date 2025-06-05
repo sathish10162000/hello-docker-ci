@@ -29,8 +29,6 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Generated version: $VERSION"
 
-
-
       - name: Build and push Docker image with dynamic version
         uses: docker/build-push-action@v5
         with:
