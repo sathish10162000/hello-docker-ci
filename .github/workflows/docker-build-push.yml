@@ -31,10 +31,11 @@ jobs:
           echo "::set-output name=tag::$VERSION"
 
 
-            - name: Build and push Docker image with dynamic version
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: sathish10162000/hello-docker-ci:${{ env.VERSION }}
+           - name: Build and push Docker image with dynamic version
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: true
+    tags: sathish10162000/hello-docker-ci:${{ env.VERSION }}
+
 
