@@ -22,12 +22,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Generate version dynamically
-        run: |
-          chmod +x ./version-dev.sh
-          VERSION=$(./version-dev.sh)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Generated version: $VERSION"
+     - name: Generate version dynamically
+       run: |
+       chmod +x ./version-dev.sh
+       VERSION=$(./version-dev.sh)
+       echo "VERSION=$VERSION" >> $GITHUB_ENV
+       echo "Generated version: $VERSION"
+
 
       - name: Build and push Docker image with dynamic version
         uses: docker/build-push-action@v5
