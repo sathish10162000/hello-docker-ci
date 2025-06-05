@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Generate version dynamically
+           - name: Generate version dynamically
         run: |
           chmod +x ./version-dev.sh
           VERSION=$(./version-dev.sh)
