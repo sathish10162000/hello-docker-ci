@@ -33,10 +33,11 @@ increment_version() {
   esac
 
   new_version="$major.$minor.$patch"
+
   echo "$new_version" > "$VERSION_FILE"
   echo "$current_year-$current_month" > "$DATE_FILE"
+
   echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
-  echo "$new_version"  # important for logging
 }
 
 if [ "$current_year" -gt "$last_year" ]; then
