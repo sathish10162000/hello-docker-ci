@@ -1,7 +1,11 @@
 #!/bin/bash
 
-VERSION_FILE=".version_dev"
-DATE_FILE=".version_dev_date"
+# Always resolve script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+VERSION_FILE="$REPO_ROOT/.version_dev"
+DATE_FILE="$REPO_ROOT/.version_dev_date"
 
 if [ -f "$VERSION_FILE" ]; then
   current_version=$(cat "$VERSION_FILE")
@@ -27,17 +31,23 @@ fi
 
 increment_version() {
   case $1 in
-    major) major=$((major + 1)); minor=0; patch=0 ;;
-    minor) minor=$((minor + 1)); patch=0 ;;
-    patch) patch=$((patch + 1)) ;;
+    major)
+      major=$((major + 1)); minor=0; patch=0 ;;
+    minor)
+      minor=$((minor + 1)); patch=0 ;;
+    patch)
+      patch=$((patch + 1)) ;;
   esac
 
   new_version="$major.$minor.$patch"
-
   echo "$new_version" > "$VERSION_FILE"
   echo "$current_year-$current_month" > "$DATE_FILE"
 
-  echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
+  # ✅ Safe export to GitHub Actions only if running there
+  if [ -n "$GITHUB_ENV" ]; then
+    echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
+  fi
+  echo "✅ New version generated: $new_version"
 }
 
 if [ "$current_year" -gt "$last_year" ]; then
