@@ -26,7 +26,7 @@ jobs:
         run: |
           chmod +x .github/scripts/version-dev.sh
           .github/scripts/version-dev.sh
-          echo "VERSION from env: $NEW_VERSION"
+          echo "Generated VERSION: $NEW_VERSION"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -35,7 +35,7 @@ jobs:
           push: true
           tags: sathish10162000/hello-docker-ci:${{ env.NEW_VERSION }}
 
-      - name: Commit version file back to repo
+      - name: Commit version files back to repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
