@@ -27,19 +27,16 @@ fi
 
 increment_version() {
   case $1 in
-    major)
-      major=$((major + 1)); minor=0; patch=0 ;;
-    minor)
-      minor=$((minor + 1)); patch=0 ;;
-    patch)
-      patch=$((patch + 1)) ;;
+    major) major=$((major + 1)); minor=0; patch=0 ;;
+    minor) minor=$((minor + 1)); patch=0 ;;
+    patch) patch=$((patch + 1)) ;;
   esac
 
   new_version="$major.$minor.$patch"
   echo "$new_version" > "$VERSION_FILE"
   echo "$current_year-$current_month" > "$DATE_FILE"
-
   echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
+  echo "$new_version"  # important for logging
 }
 
 if [ "$current_year" -gt "$last_year" ]; then
@@ -49,9 +46,3 @@ elif [ "$current_month" -gt "$last_month" ]; then
 else
   increment_version "patch"
 fi
-
-# Safe export to GitHub Actions
-echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-echo "✅ Set version to $new_version"
-
-
