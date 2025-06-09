@@ -25,9 +25,8 @@ jobs:
       - name: Generate dynamic version
         run: |
           chmod +x .github/scripts/version-dev.sh
-          NEW_VERSION=$(.github/scripts/version-dev.sh)
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "🟢 VERSION GENERATED: $NEW_VERSION"
+          .github/scripts/version-dev.sh
+          echo "🟢 Generated version: $NEW_VERSION"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -36,11 +35,11 @@ jobs:
           push: true
           tags: sathish10162000/hello-docker-ci:${{ env.NEW_VERSION }}
 
-      - name: Commit version file back to repo
+      - name: Commit updated version file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin main --rebase || true
-          git add .version_dev .version_dev_date
-          git commit -m "chore: bump version to $NEW_VERSION [skip ci]" || echo "nothing to commit"
-          git push origin main || echo "nothing to push"
+          git add .version_dev
+          git commit -m "chore: bump version to $NEW_VERSION [skip ci]" || echo "Nothing to commit"
+          git push origin main || echo "Nothing to push"
