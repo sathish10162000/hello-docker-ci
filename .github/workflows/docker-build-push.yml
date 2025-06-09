@@ -1,4 +1,3 @@
-
 name: Build and Push Docker Image with Version
 
 on:
@@ -11,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-           - name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Make version script executable
@@ -20,7 +19,6 @@ jobs:
       - name: Run version bump script
         id: bump
         run: .github/scripts/version-bump.sh
-
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -44,4 +42,3 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
