@@ -31,22 +31,20 @@ fi
 
 increment_version() {
   case $1 in
-    major)
-      major=$((major + 1)); minor=0; patch=0 ;;
-    minor)
-      minor=$((minor + 1)); patch=0 ;;
-    patch)
-      patch=$((patch + 1)) ;;
+    major) major=$((major + 1)); minor=0; patch=0 ;;
+    minor) minor=$((minor + 1)); patch=0 ;;
+    patch) patch=$((patch + 1)) ;;
   esac
 
   new_version="$major.$minor.$patch"
   echo "$new_version" > "$VERSION_FILE"
   echo "$current_year-$current_month" > "$DATE_FILE"
 
-  # ✅ Safe export to GitHub Actions only if running there
+  # Only export to GitHub Actions if GITHUB_ENV is set
   if [ -n "$GITHUB_ENV" ]; then
     echo "NEW_VERSION=$new_version" >> "$GITHUB_ENV"
   fi
+
   echo "✅ New version generated: $new_version"
 }
 
