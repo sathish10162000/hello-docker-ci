@@ -11,12 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+           - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Make version script executable
+        run: chmod +x .github/scripts/version-bump.sh
 
       - name: Run version bump script
         id: bump
         run: .github/scripts/version-bump.sh
+
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
