@@ -25,7 +25,8 @@ jobs:
       - name: Generate dynamic version
         run: |
           chmod +x .github/scripts/version-dev.sh
-          .github/scripts/version-dev.sh
+          NEW_VERSION=$(.github/scripts/version-dev.sh)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "🟢 VERSION GENERATED: $NEW_VERSION"
 
       - name: Build and push Docker image
