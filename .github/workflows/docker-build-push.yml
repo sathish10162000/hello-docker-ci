@@ -1,4 +1,4 @@
-name: Build and Push Docker Image with Version
+name: Build and Push Docker Image
 
 on:
   push:
@@ -13,33 +13,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Make version script executable
-        run: chmod +x .github/scripts/version-bump.sh
-
-      - name: Run version bump script
-        id: bump
-        run: .github/scripts/version-bump.sh
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
+      - name: Run version bump script
+        run: |
+          chmod +x .github/scripts/version-dev.sh
+          .github/scripts/version-dev.sh
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/your-repo:${{ steps.bump.outputs.new_version }}
+          tags: sathish10162000/hello-docker-ci:${{ env.NEW_VERSION }}
 
-      - name: Commit updated version
+      - name: Commit updated version file
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-          git add .version
-          git commit -m "ci: bump version to ${{ steps.bump.outputs.new_version }}" || echo "No changes to commit"
-          git push origin HEAD:main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main --rebase || true
+          git add .version_dev
+          git commit -m "ci: bump version to $NEW_VERSION [skip ci]" || echo "nothing to commit"
+          git push origin main || echo "nothing to push"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
